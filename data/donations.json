@@ -12,7 +12,7 @@
 { "id": 12, "charityName": "BUILD", "charityCategory": "O", "dateCompleted": "2016-01-26 21:10:00.000", "amount": 140.00, "donorFirstName": "Jack", "donorLastName": "Smith"}
 { "id": 13, "charityName": "Red Cross", "charityCategory": "P", "dateCompleted": "2016-01-27 07:00:00.000", "amount": 45.00, "donorFirstName": "Jack", "donorLastName": "Smith" }
 { "id": 14, "charityName": "ASPCA", "charityCategory": "C", "dateCompleted": "2016-01-27 07:20:00.000", "amount": 35.00, "donorFirstName": "Sally", "donorLastName": "Jones"}
-{ "id": 15, "charityName": "Red Cross", "charityCategory": "P", "dateCompleted": "2016-01-27 8:00:00.000", "amount": 62.00, "donorFirstName": "John", "donorLastName": "Wilson"}
+{ "id": 15, "charityName": "Red Cross", "charityCategory": "P", "dateCompleted": "2016-01-27 08:00:00.000", "amount": 62.00, "donorFirstName": "John", "donorLastName": "Wilson"}
 { "id": 16, "charityName": "United Way", "charityCategory": "T", "dateCompleted": "2016-01-27 08:50:00.000", "amount": 34.00, "donorFirstName": "Helen", "donorLastName": "Hunt"}
 { "id": 17, "charityName": "Stanford Blood Center", "charityCategory": "E", "dateCompleted": "2016-01-27 08:50:00.000", "amount": 29.00, "donorFirstName": "Jack", "donorLastName": "Smith"}
 { "id": 18, "charityName": "Stanford University", "charityCategory": "B", "dateCompleted": "2016-01-27 09:30:00.000", "amount": 49.00, "donorFirstName": "Jack", "donorLastName": "Smith"}
