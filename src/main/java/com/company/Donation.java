@@ -1,7 +1,7 @@
 package com.company;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  * @author Jeff Risberg
@@ -11,7 +11,7 @@ public class Donation implements Serializable {
     private Long id;
     private String charityName;
     private String charityCategory;
-    private Date dateCompleted;
+    private Timestamp dateCompleted;
     private float amount;
     private String donorFirstName;
     private String donorLastName;
@@ -19,7 +19,7 @@ public class Donation implements Serializable {
     public Donation() {
     }
 
-    public Donation(Long id, String charityName, String charityCategory, Date dateCompleted, float amount, String donorFirstName, String donorLastName) {
+    public Donation(Long id, String charityName, String charityCategory, Timestamp dateCompleted, float amount, String donorFirstName, String donorLastName) {
         this.id = id;
         this.charityName = charityName;
         this.charityCategory = charityCategory;
@@ -37,11 +37,11 @@ public class Donation implements Serializable {
         this.id = id;
     }
 
-    public Date getDateCompleted() {
+    public Timestamp getDateCompleted() {
         return dateCompleted;
     }
 
-    public void setDateCompleted(Date dateCompleted) {
+    public void setDateCompleted(Timestamp dateCompleted) {
         this.dateCompleted = dateCompleted;
     }
 

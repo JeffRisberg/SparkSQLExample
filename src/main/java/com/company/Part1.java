@@ -2,17 +2,33 @@ package com.company;
 
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.*;
 
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * @author Jeff Risberg
  * @since 10/30/17
  */
 public class Part1 {
+
+    static Dataset<Row> addDateHourColumns(Dataset<Row> input, String dateFieldName) {
+        Dataset<Row> result = input.withColumn("hour", functions.hour(input.col(dateFieldName)))
+                .withColumn("date",functions.to_date(input.col(dateFieldName)));
+
+        return result;
+    }
+
+    static Dataset<Row> groupCountAndAmountFunc(Dataset<Row> input) {
+        RelationalGroupedDataset result = input.groupBy("date", "hour");
+
+        return result.agg(
+                functions.count("id").as("count"),
+                functions.sum("amount").as("amount"));
+    }
+
     public static void main(String[] args) {
 
         SparkSession spark = SparkSession
@@ -21,23 +37,8 @@ public class Part1 {
                 .master("local[4]")
                 .getOrCreate();
 
-        /*
-        // Create a dataframe
-        Dataset<Row> df = spark.read().option("header", "true").csv("./data/peopleWithHeader.txt");
-        df.show();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
-        // This is relatively fast
-        Dataset<Row> dfs = spark.read().json("./data/employee.json");
-        dfs.show();
-        dfs.printSchema();
-
-        // this is faster
-        dfs.filter(dfs.col("age").gt(23)).show();
-
-        // This seems to take quite a while, perhaps because GroupBy and Count are
-        // creating a new RDD, and count requires a collection over the clusters.
-        dfs.groupBy("age").count().show();
-*/
         // Create an RDD of Donation objects from a text file
         JavaRDD<Donation> donationRDD = spark.read()
                 .textFile("./data/donations.txt")
@@ -47,11 +48,14 @@ public class Part1 {
                     public Donation call(String line) throws Exception {
                         String[] parts = line.split(",");
 
+                        Date parsedDate = dateFormat.parse(parts[3].trim());
+                        Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+
                         Donation donation = new Donation();
                         donation.setId(Long.parseLong(parts[0].trim()));
                         donation.setCharityName(parts[1].trim());
                         donation.setCharityCategory(parts[2].trim());
-                        donation.setDateCompleted(new Date(117,1,1)); //parts[3].trim());
+                        donation.setDateCompleted(timestamp);
                         donation.setAmount(Float.parseFloat(parts[4].trim()));
                         donation.setDonorFirstName(parts[5].trim());
                         donation.setDonorLastName(parts[6].trim());
@@ -66,32 +70,35 @@ public class Part1 {
         // Register the DataFrame as a temporary view
         donationsDF.createOrReplaceTempView("donations");
 
+        // Part 1
         // SQL statements can be run by using the sql methods provided by spark
-        Dataset<Row> donations2DF = spark.sql("SELECT * FROM donations");
+        Dataset<Row> donationsRedCrossDF = spark.sql("SELECT * FROM donations where charityName = 'Red Cross'");
 
-        /*
-        // The columns of a row in the result can be accessed by field index
-        Encoder<String> stringEncoder = Encoders.STRING();
-        Dataset<String> teenagerNamesByIndexDF = teenagersDF.map(new MapFunction<Row, String>() {
-            @Override
-            public String call(Row row) throws Exception {
-                return "Name: " + row.getString(0);
-            }
-        }, stringEncoder);
-        teenagerNamesByIndexDF.show();
+        donationsRedCrossDF.show();
 
-        // or accessed by field name
-        Dataset<String> teenagerNamesByFieldDF = teenagersDF.map(new MapFunction<Row, String>() {
-            @Override
-            public String call(Row row) throws Exception {
-                return "Name: " + row.<String>getAs("name");
-            }
-        }, stringEncoder);
-        teenagerNamesByFieldDF.show();
-*/
-        // Summary statistics are also available.
-        Dataset<Row> summary = donationsDF.describe();
-        summary.show();
+        // Part 2
+        donationsDF.groupBy("charityCategory").agg(
+                functions.count("id").as("count"),
+                functions.sum("amount").as("amount")).show();
+
+        Dataset<Row> donations2DF = donationsDF.withColumn("hour", functions.hour(donationsDF.col("dateCompleted")))
+                .withColumn("date",functions.to_date(donationsDF.col("dateCompleted")));
+
+        donations2DF.show();
+
+        Dataset x = donations2DF.groupBy("date", "hour").agg(
+                functions.count("id").as("count"),
+                functions.sum("amount").as("amount"));
+
+        x.show();
+
+        Dataset<Row> yy = addDateHourColumns(donationsDF, "dateCompleted");
+        groupCountAndAmountFunc(yy).show();
+
+        // Part 3
+        Dataset<Row> qwerty = spark.sql("SELECT * FROM donations where charityName = 'Red Cross'");
+
+        groupCountAndAmountFunc(addDateHourColumns(qwerty, "dateCompleted")).show();
 
         spark.stop();
     }
