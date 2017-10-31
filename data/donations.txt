@@ -1,5 +1,0 @@
-1, Red Cross, A, 2016-01-26 12:00:00.000, 45.00, Jack, Smith
-2, ASPCA, B, 2016-01-26 12:20:00.000, 35.00, Sally, Jones
-3, Red Cross, A, 2016-01-26 14:00:00.000, 62.00, John, Wilson
-4, United Way, C, 2016-01-26 14:50:00.000, 34.00, Helen, Hunt
-5, Stanford Blood Center, D, 2016-01-26 15:00:00.000, 29.00, Jack, Smith
