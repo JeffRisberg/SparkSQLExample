@@ -7,10 +7,12 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="simple-project" />
+        <module name="SparkSQLExample" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="simple-project" target="1.8" />
+      <module name="SparkSQLExample" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
